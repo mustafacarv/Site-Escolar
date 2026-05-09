@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Tipografia D&D */
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e8e6e1;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Efeito de padrão de fundo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 0.02) 0px,
+                    rgba(255, 255, 255, 0.02) 1px,
+                    transparent 1px,
+                    transparent 2px
+                ),
+                radial-gradient(
+                    circle at 20% 50%,
+                    rgba(147, 112, 219, 0.1) 0%,
+                    transparent 50%
+                ),
+                radial-gradient(
+                    circle at 80% 80%,
+                    rgba(75, 0, 130, 0.1) 0%,
+                    transparent 50%
+                );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container-login {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+
+        /* Card principal */
+        .login-card {
+            background: rgba(30, 25, 60, 0.95);
+            border: 2px solid rgba(147, 112, 219, 0.4);
+            border-radius: 16px;
+            padding: 40px 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header com logo/título */
+        .login-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #9370db 0%, #6a4c93 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 4px 15px rgba(147, 112, 219, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .login-header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #e8e6e1;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .login-header p {
+            font-size: 14px;
+            color: #a8a6a0;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        /* Formulário */
+        .login-form {
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #c4c1ba;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(147, 112, 219, 0.3);
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 15px;
+            color: #e8e6e1;
+            font-family: 'Lato', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-control::placeholder {
+            color: #7d7a74;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #9370db;
+            box-shadow: 0 0 0 3px rgba(147, 112, 219, 0.15);
+            outline: none;
+            color: #e8e6e1;
+        }
+
+        /* Estiliza a caixa fechada */
+        .form-select {
+            background-color: #6a4c93; /* Fundo escuro */
+            color: #ffffff;             /* Letra branca */
+            border: 1px solid #9370db;
+        }
+
+        /* Estiliza as opções dentro da lista */
+        .form-select option {
+            background-color: #15102D;
+            color: #8462B0;
+        }
+
+        /* Checkbox Remember Me */
+        .form-check {
+            margin-top: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            margin-top: 3px;
+            border: 1.5px solid rgba(147, 112, 219, 0.4);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-check-input:checked {
+            background: linear-gradient(135deg, #9370db 0%, #6a4c93 100%);
+            border-color: #9370db;
+        }
+
+        .form-check-input:focus {
+            border-color: #9370db;
+            box-shadow: 0 0 0 3px rgba(147, 112, 219, 0.15);
+        }
+
+        .form-check-label {
+            font-size: 14px;
+            color: #a8a6a0;
+            margin-left: 8px;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        /* Botão de login */
+        .btn-login {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #9370db 0%, #6a4c93 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(147, 112, 219, 0.3);
+            margin-bottom: 15px;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(147, 112, 219, 0.4);
+            background: linear-gradient(135deg, #a584e8 0%, #7d5ba5 100%);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        /* Separador */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            gap: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(147, 112, 219, 0.3), transparent);
+        }
+
+        .divider-text {
+            font-size: 13px;
+            color: #7d7a74;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Buttons alternativos (redes sociais) */
+        .btn-social {
+            width: 100%;
+            padding: 11px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(147, 112, 219, 0.2);
+            border-radius: 8px;
+            color: #e8e6e1;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .btn-social:hover {
+            background: rgba(147, 112, 219, 0.15);
+            border-color: rgba(147, 112, 219, 0.4);
+        }
+
+        .btn-social i {
+            margin-right: 8px;
+        }
+
+        /* Link de cadastro */
+        .login-footer {
+            text-align: center;
+            border-top: 1px solid rgba(147, 112, 219, 0.2);
+        }
+
+        .login-footer p {
+            font-size: 14px;
+            color: #a8a6a0;
+            margin: 0;
+        }
+
+        .login-footer a {
+            color: #9370db;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: #b894ff;
+            text-decoration: underline;
+        }
+
+        /* Mensagem de erro (exemplo) */
+        .alert {
+            border-radius: 8px;
+            border: 1.5px solid rgba(220, 53, 69, 0.3);
+            background: rgba(220, 53, 69, 0.1);
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #ff9fa5;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsividade */
+        @media (max-width: 480px) {
+            .container-login {
+                padding: 16px;
+            }
+
+            .login-card {
+                padding: 30px 20px;
+            }
+
+            .login-header h1 {
+                font-size: 24px;
+            }
+
+            .logo-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 28px;
+            }
+
+            .btn-login {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .form-control {
+                padding: 11px 12px;
+                font-size: 14px;
+            }
+        }
+
+        /* Tema alternativo - Modo escuro aprimorado */
+        @media (prefers-color-scheme: dark) {
+            .login-card {
+                background: rgba(20, 15, 45, 0.98);
+                border-color: rgba(147, 112, 219, 0.5);
+            }
+
+            .form-control {
+                background: rgba(255, 255, 255, 0.03);
+                border-color: rgba(147, 112, 219, 0.25);
+            }
+
+            .form-control:focus {
+                background: rgba(255, 255, 255, 0.06);
+            }
+
+            .form-select {
+                background: rgba(255, 255, 255, 0.03);
+                border-color: rgba(147, 112, 219, 0.25);
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container-login">
+        <!-- Card de Login -->
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+                <div class="logo-icon">🐉</div>
+                <h1>RPG da Tireido</h1>
+                <p>Identifique-se para prosseguir com a crônica.</p>
+            </div>
+
+            <!-- Alert de erro (opcional) -->
+            <div class="alert">
+                Credenciais inválidas. Tente novamente.
+            </div>
+
+            <!-- Formulário -->
+            <form class="login-form" id="loginForm">
+                <!-- Campo de Email/Usuário -->
+                <div class="form-group">
+                    <label for="email">Quem Ousa Entrar?</label>
+                    <select class="form-select" placeholder="Selecione seu personagem...">
+                        <option selected hidden>Selecione seu personagem...</option>
+                        <option value="1">Ana</option>
+                        <option value="2">Gabriel</option>
+                        <option value="3">Kaike</option>
+                        <option value="4">Mustafá</option>
+                        <option value="5">Nathália</option>
+                        <option value="6">Thiago (Mestre)</option>
+                    </select>
+                </div>
+
+                <!-- Campo de Senha -->
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="password" 
+                        placeholder="••••••••"
+                        required
+                    >
+                </div>
+
+                <!-- Checkbox Lembrar -->
+                <div class="form-check">
+                    <input 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        id="rememberMe"
+                    >
+                    <label class="form-check-label" for="rememberMe">
+                        Lembrar-se de mim
+                    </label>
+                </div>
+
+                <!-- Botão de Login -->
+                <button type="submit" class="btn-login" onclick="logar()">Entrar na Campanha</button>
+
+                <!-- Footer com Link de Cadastro -->
+                <div class="login-footer mt-2 pt-1 mt-md-3 pt-md-3 ">
+                    <p>Ainda não possui um personagem? <br>
+                    <a href="Criacao_Personagem.html">Crie uma agora</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (opcional, para funcionalidades interativas) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Exemplo: Validação do formulário
+        const loginForm = document.getElementById('loginForm');
+        const alertBox = document.querySelector('.alert');
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const usuario = document.getElementById('usuario').value;
+            const password = document.getElementById('password').value;
+
+            // Simular validação
+            if (usuario && password) {
+                console.log('Tentando fazer login com:', usuario);
+                // Aqui você conectaria com seu backend PHP
+                alertBox.classList.remove('show');
+                // loginForm.submit(); // Descomente para enviar de verdade
+            } else {
+                alertBox.classList.add('show');
+            }
+        });
+
+        function logar() {
+            window.location.href = "Menu.html";
+        }
+
+        // window.addEventListener('load', () => {
+        //     setTimeout(() => {
+        //         alertBox.classList.add('show');
+        //     }, 1000);
+        // });
+    </script>
+</body>
+</html>
